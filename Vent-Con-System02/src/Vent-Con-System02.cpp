@@ -254,7 +254,7 @@ int main(void)
 	Chip_RIT_Init(LPC_RITIMER);
 	NVIC_EnableIRQ(RITIMER_IRQn);
 	ModbusMaster node(2); // Create modbus object that connects to slave id 2
-
+/*
 	int g;
 
 			for(g = 0; g<3; g++)
@@ -274,7 +274,7 @@ int main(void)
 
 					Sleep(4000);
 			}
-
+*/
 
 	LiquidCrystal lcd(8, 9, 10, 11, 12, 13);
 
@@ -332,7 +332,7 @@ int main(void)
 				check(presSensPoint, presEditPoint, freqEditPoint);
 		}
 
-		printRegister(node, 3); // for keeping the modbus on (change to an interupt)
+		//printRegister(node, 3); // for keeping the modbus on (change to an interupt)
 		k = isPressed();
 		if(k > 0) {
 			switch(k){
