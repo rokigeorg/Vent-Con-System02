@@ -88,14 +88,14 @@ void TempEdit::display() {
 		snprintf(s, 16, "[%4.2f]C", edit);
 		lcd.Print(s);
 		lcd.setCursor(9,1);
-		int result =(edit*50)/upperL;
+		int result =(edit*50)/((upperL-lowerL)*2);
 		barG.draw(result);
 	}
 	else {
 		snprintf(s, 16, " %4.2f C", value);
 		lcd.Print(s);
-		lcd.setCursor(10,1);
-		int result =(value*50)/upperL;
+		lcd.setCursor(9,1);
+		int result =(value*50)/((upperL-lowerL)*2);
 		barG.draw(result);
 	}
 	lcd.Print(s);
