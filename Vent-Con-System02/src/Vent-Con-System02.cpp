@@ -291,17 +291,17 @@ int main(void)
 	PropertyEdit *presEditPoint;
 
 
-	TempSens TempSensObj();
+	TempSens TempSensObj("");
 	PresSens PresSensObj(0, 100000);
 
 	SensorGeneral *tempSensPoint;
 	SensorGeneral *presSensPoint;
 
 
-	tempSensPoint = &TempSensObj;
 	presSensPoint = &PresSensObj;
-	presEditPoint = &PresEditObj;
+	tempSensPoint = &TempSensObj;
 
+	presEditPoint = &PresEditObj;
 	tempEditPoint = &TempEditObj;
 	freqEditPoint = &FreqEditObj;
 
