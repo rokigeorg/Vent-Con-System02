@@ -291,7 +291,7 @@ int main(void)
 	PropertyEdit *presEditPoint;
 
 
-	TempSens TempSensObj("");
+	TempSens TempSensObj;
 	PresSens PresSensObj(0, 100000);
 
 	SensorGeneral *tempSensPoint;

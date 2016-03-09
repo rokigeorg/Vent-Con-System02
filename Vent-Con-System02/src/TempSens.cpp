@@ -8,7 +8,7 @@
 #include "TempSens.h"
 
 
-TempSens::TempSens(std::string t){
+TempSens::TempSens(){
 
 	/* Setup ADC for 12-bit mode and normal power */
 		Chip_ADC_Init(LPC_ADC0, 0);

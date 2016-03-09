@@ -15,7 +15,7 @@ class TempSens : public SensorGeneral {
 
 
 public:
-	TempSens(std::string t);
+	TempSens();
 	virtual ~TempSens();
 	float readValues(); //Chip_ADC_StartSequencer(LPC_ADC0, ADC_SEQA_IDX);
 };

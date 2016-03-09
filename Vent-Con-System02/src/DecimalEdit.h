@@ -12,6 +12,7 @@
 #include "ModbusMaster.h"
 #include <string>
 #include "LiquidCrystal.h"
+#include "BarGraph.h"
 
 void Sleep(int ms);
 
@@ -32,8 +33,6 @@ public:
 	bool setFrequency(ModbusMaster& node, uint16_t freq);
 	float getDesValue(){};
 	void setSensValue(float val){};
-
-
 
 private:
 	void save();

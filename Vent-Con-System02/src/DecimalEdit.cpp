@@ -102,16 +102,27 @@ void DecimalEdit::setFocus(bool focus) {
 }
 
 void DecimalEdit::display() {
+	BarGraph barG(lcd, 50);
+
 	lcd.clear();
 	lcd.setCursor(0,0);
 	lcd.Print(title);
 	lcd.setCursor(0,1);
 	char s[16];
 	if(focus) {
-		snprintf(s, 16, "     [%4.2f]     ", edit);
+		snprintf(s, 16, "[%4.2f]%", edit);
+		lcd.Print(s);
+		lcd.setCursor(9,1);
+		int result =(edit*50)/upperL;
+		barG.draw(result);
+
 	}
 	else {
-		snprintf(s, 16, "      %4.2f      ", edit);
+		snprintf(s, 16, "[%4.2f]%", value);
+		lcd.Print(s);
+		lcd.setCursor(9,1);
+		int result =(edit*50)/upperL;
+		barG.draw(result);
 	}
 	lcd.Print(s);
 }
