@@ -40,6 +40,7 @@ void PresEdit::save() {
 
 void PresEdit::setSensValue(float val){
 	value = val;
+	display();
 }
 
 void PresEdit::setValue(float val){

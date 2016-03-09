@@ -12,6 +12,7 @@
 #include "ModbusMaster.h"
 #include <string>
 #include "LiquidCrystal.h"
+#include "BarGraph.h"
 
 void Sleep(int ms);
 

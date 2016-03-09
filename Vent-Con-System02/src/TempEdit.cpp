@@ -22,38 +22,6 @@ TempEdit::TempEdit(LiquidCrystal& lcd_, ModbusMaster& node_, std::string editTit
 	lowerL = _lowerL;
 }
 
-
-/*
-bool TempEdit::setFrequency(ModbusMaster& node, uint16_t freq) {
-	uint8_t result;
-	int ctr;
-	bool atSetpoint;
-	const int delay = 500;
-
-	node.writeSingleRegister(1, freq); // set motor frequency
-
-	printf("Set freq = %d\n", freq/40); // for debugging
-
-	// wait until we reach set point or timeout occurs
-	ctr = 0;
-	atSetpoint = false;
-	do {
-		Sleep(delay);
-		// read status word
-		result = node.readHoldingRegisters(3, 1);
-		// check if we are at setpoint
-		if (result == node.ku8MBSuccess) {
-			if(node.getResponseBuffer(0) & 0x0100) atSetpoint = true;
-		}
-		ctr++;
-	} while(ctr < 20 && !atSetpoint);
-
-	printf("Elapsed: %d\n", ctr * delay); // for debugging
-
-	return atSetpoint;
-}
-*/
-
 TempEdit::~TempEdit() {
 	// TODO Auto-generated destructor stub
 }
@@ -64,11 +32,6 @@ void TempEdit::save() {
 	desVal = edit;
 	TempSensFlag = true;
 	PresSensFlag = false;
-
-
-	//setFrequency(node, value);
-
-	// todo: save current value for example to EEPROM for permanent storage
 }
 
 //this sets the desVal to the user input
@@ -80,6 +43,7 @@ void TempEdit::setValue(float val){
 //this sets the read value from the sens to the obj
 void TempEdit::setSensValue(float val){
 	value = val;
+	display();
 
 }
 
@@ -113,16 +77,26 @@ void TempEdit::setFocus(bool focus) {
 }
 
 void TempEdit::display() {
+	BarGraph barG(lcd, 50);
+
 	lcd.clear();
 	lcd.setCursor(0,0);
 	lcd.Print(title);
 	lcd.setCursor(0,1);
 	char s[16];
 	if(focus) {
-		snprintf(s, 16, "     [%4.2f]     ", edit);
+		snprintf(s, 16, "[%4.2f]C", edit);
+		lcd.Print(s);
+		lcd.setCursor(9,1);
+		int result =(edit*50)/upperL;
+		barG.draw(result);
 	}
 	else {
-		snprintf(s, 16, "      %4.2f      ", value);
+		snprintf(s, 16, " %4.2f C", value);
+		lcd.Print(s);
+		lcd.setCursor(10,1);
+		int result =(value*50)/upperL;
+		barG.draw(result);
 	}
 	lcd.Print(s);
 }
