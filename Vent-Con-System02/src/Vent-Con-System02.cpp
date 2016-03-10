@@ -137,10 +137,9 @@ void SysTick_Handler(void)
 	//We dont need this, this should be implemented in  the specific class and a virtual method read sens should call this
 	if (TempCount >= TICKRATE_HZ / 100) {
 		TempCount = 0;
-				Chip_ADC_StartSequencer(LPC_ADC0, ADC_SEQA_IDX);
-			}
+		Chip_ADC_StartSequencer(LPC_ADC0, ADC_SEQA_IDX);
+	}
 	//end of the crap
-
 }
 #ifdef __cplusplus
 }
@@ -221,7 +220,9 @@ void check(SensorGeneral *s, PropertyEdit *p, PropertyEdit *setFrq)
 	else if(p->getValue() > (p->getDesValue() - p->getTol()))
 		setFrq->increment();
 
-	setFrq->save();
+
+	//needs to be uncommented when working with ModBus
+	//setFrq->save();
 }
 
 

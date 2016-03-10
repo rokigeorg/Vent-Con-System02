@@ -63,8 +63,9 @@ float DecimalEdit::getTol() {
 void DecimalEdit::save() {
 	// set current value to be same as edit value
 	value = edit;
-	setFrequency(node, value);
-	// todo: save current value for example to EEPROM for permanent storage
+
+	//setFrequency(node, value);
+	//needs to be uncommented when working with ModBus
 }
 
 void DecimalEdit::setValue(float value){
