@@ -124,7 +124,7 @@ void SysTick_Handler(void)
 	TempCount++;
 	checktick++;
 	systicks2++;
-	Flag=true;
+	//Flag=true;
 	if(counter > 0) {
 		counter-=1;
 	}
@@ -183,6 +183,7 @@ int isPressed(){
 	for(int i =0;i < 4; i++){
 		if(dArray[i]){
 			btnKeyNum = i+1;
+			checktick = 0;
 		}
 	}
 

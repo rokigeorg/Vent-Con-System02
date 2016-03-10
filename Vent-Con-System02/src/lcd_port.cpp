@@ -58,8 +58,8 @@ void delayMicroseconds(int us)
 		__WFI();
 	}
 	// simple version that rounds up to nearest ms
-	int ms = us / 1000;
-	if(us % 1000 != 0) ms++;
-	Sleep(ms); // use systick timer at 1000 Hz for this
+	//int ms = us / 1000;
+	//if(us % 1000 != 0) ms++;
+	//Sleep(ms); // use systick timer at 1000 Hz for this
 	// you need to implement Sleep() - hint: adapt it from the earli
 }
