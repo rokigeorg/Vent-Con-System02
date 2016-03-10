@@ -21,6 +21,7 @@ class DecimalEdit:public PropertyEdit {
 public:
 	DecimalEdit(LiquidCrystal& lcd_,ModbusMaster& node_, std::string editTitle, float _upperL = 100,float _lowerL =0);
 	virtual ~DecimalEdit();
+	void save();
 	void increment();
 	void decrement();
 	void accept();
@@ -35,7 +36,6 @@ public:
 	void setSensValue(float val){};
 
 private:
-	void save();
 	void displayEditValue();
 	LiquidCrystal& lcd;
 	ModbusMaster& node;

@@ -22,6 +22,7 @@ class PresEdit:public PropertyEdit {
 public:
 	PresEdit(LiquidCrystal& lcd_,ModbusMaster& node_, std::string editTitle, float _upperL = 100,float _lowerL =0);
 	virtual ~PresEdit();
+	void save();
 	void increment();
 	void decrement();
 	void accept();
@@ -35,7 +36,6 @@ public:
 	bool setFrequency(ModbusMaster& node, uint16_t freq){};
 	void setSensValue(float val);
 private:
-	void save();
 	void displayEditValue();
 	LiquidCrystal& lcd;
 	ModbusMaster& node;

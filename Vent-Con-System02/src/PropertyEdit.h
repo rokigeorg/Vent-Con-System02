@@ -32,6 +32,7 @@ public:
 	virtual void setValue(float value) =0;
 	virtual void setSensValue(float val) =0;
 	virtual bool setFrequency(ModbusMaster& node, uint16_t freq) =0;
+	virtual void save()=0;
 };
 
 #endif /* PROPERTYEDIT_H_ */

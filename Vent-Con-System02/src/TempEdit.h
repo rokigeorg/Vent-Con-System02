@@ -21,6 +21,7 @@ class TempEdit:public PropertyEdit {
 public:
 	TempEdit(LiquidCrystal& lcd_,ModbusMaster& node_, std::string editTitle, float _upperL = 100,float _lowerL =0);
 	virtual ~TempEdit();
+	void save();
 	void increment();
 	void decrement();
 	void accept();
@@ -34,7 +35,6 @@ public:
 	float getDesValue();
 	bool setFrequency(ModbusMaster& node, uint16_t freq){};
 private:
-	void save();
 	void displayEditValue();
 	LiquidCrystal& lcd;
 	ModbusMaster& node;

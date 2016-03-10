@@ -216,11 +216,12 @@ void check(SensorGeneral *s, PropertyEdit *p, PropertyEdit *setFrq)
 
 	p->setSensValue(s->readValues());
 
-
 	if(p->getValue() < (p->getDesValue() - p->getTol()))
 		setFrq->decrement();
 	else if(p->getValue() > (p->getDesValue() - p->getTol()))
 		setFrq->increment();
+
+	setFrq->save();
 }
 
 
@@ -254,26 +255,23 @@ int main(void)
 	Chip_RIT_Init(LPC_RITIMER);
 	NVIC_EnableIRQ(RITIMER_IRQn);
 	ModbusMaster node(2); // Create modbus object that connects to slave id 2
-/*
-	int g;
 
-			for(g = 0; g<3; g++)
-			{
-				node.begin(9600); // set transmission rate - other parameters are set inside the object and can't be changed here
+	/*
+
+	 node.begin(9600); // set transmission rate - other parameters are set inside the object and can't be changed here
 
 
-					node.writeSingleRegister(0, 0x0406); // prepare for starting
+	node.writeSingleRegister(0, 0x0406); // prepare for starting
 
-					Sleep(1000); // give converter some time to set up
-					// note: we should have a startup state machine that check converter status and acts per current status
-					//       but we take the easy way out and just wait a while and hope that everything goes well
-
-
-					node.writeSingleRegister(0, 0x047F); // set drive to start mode
+	Sleep(1000); // give converter some time to set up
+	// note: we should have a startup state machine that check converter status and acts per current status
+	//       but we take the easy way out and just wait a while and hope that everything goes well
 
 
-					Sleep(4000);
-			}
+	node.writeSingleRegister(0, 0x047F); // set drive to start mode
+
+
+	Sleep(4000);
 */
 
 	LiquidCrystal lcd(8, 9, 10, 11, 12, 13);
@@ -319,19 +317,6 @@ int main(void)
 	volatile static int k;
 	while(1){
 
-
-
-		 //check for the checkflag if true set it false and write down the functionality for checking
-
-		if(checkFlag)
-		{
-			checkFlag = false;
-			if(TempSensFlag)
-				check(tempSensPoint, tempEditPoint, freqEditPoint);
-			else if(PresSensFlag)
-				check(presSensPoint, presEditPoint, freqEditPoint);
-		}
-
 		//printRegister(node, 3); // for keeping the modbus on (change to an interupt)
 		k = isPressed();
 		if(k > 0) {
@@ -350,6 +335,18 @@ int main(void)
 				break;
 			}
 		}
+
+		 //check for the checkflag if true set it false and write down the functionality for checking
+
+		if(checkFlag)
+			{
+				checkFlag = false;
+				if(TempSensFlag)
+					check(tempSensPoint, tempEditPoint, freqEditPoint);
+				else if(PresSensFlag)
+					check(presSensPoint, presEditPoint, freqEditPoint);
+			}
+
 	}
 
 	return 1;
