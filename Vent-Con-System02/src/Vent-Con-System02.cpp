@@ -180,10 +180,10 @@ uint32_t millis() {
 int isPressed(){
 	int btnKeyNum =0;
 	//create digi
-	static DebouncedInput dInput4(4,10);
-	static DebouncedInput dInput5(5,10);
-	static DebouncedInput dInput6(6,10);
-	static DebouncedInput dInput7(7,10);
+	static DebouncedInput dInput4(4,100);
+	static DebouncedInput dInput5(5,100);
+	static DebouncedInput dInput6(6,100);
+	static DebouncedInput dInput7(7,100);
 
 	static bool dArray[4];
 

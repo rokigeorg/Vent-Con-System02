@@ -114,7 +114,7 @@ void DecimalEdit::display() {
 		snprintf(s, 16, "[%4.2f]%", edit);
 		lcd.Print(s);
 		lcd.setCursor(9,1);
-		int result =(edit*50)/upperL;
+		int result =(edit*50)/((upperL-lowerL)*2);
 		barG.draw(result);
 
 	}
@@ -122,7 +122,7 @@ void DecimalEdit::display() {
 		snprintf(s, 16, " %4.2f %", value);
 		lcd.Print(s);
 		lcd.setCursor(9,1);
-		int result =(edit*50)/upperL;
+		int result =(edit*50)/((upperL-lowerL)*2);
 		barG.draw(result);
 	}
 	lcd.Print(s);
