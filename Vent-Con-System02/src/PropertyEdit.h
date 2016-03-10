@@ -14,6 +14,7 @@
 
 extern volatile bool TempSensFlag;
 extern volatile bool PresSensFlag;
+extern volatile bool AutoFlag;
 
 class PropertyEdit {
 public:

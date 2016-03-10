@@ -32,7 +32,9 @@ void TempEdit::save() {
 	desVal = edit;
 	TempSensFlag = true;
 	PresSensFlag = false;
+	AutoFlag = false;
 }
+
 
 //this sets the desVal to the user input
 void TempEdit::setValue(float val){

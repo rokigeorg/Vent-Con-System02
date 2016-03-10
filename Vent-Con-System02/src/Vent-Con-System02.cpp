@@ -40,6 +40,7 @@
 #include "SensorGeneral.h"
 #include "TempSens.h"
 #include "PresSens.h"
+#include "AutoEdit.h"
 
 /*****************************************************************************
  * Private types/enumerations/variables
@@ -64,9 +65,11 @@ static int dPort[4] = {0,0,1,0};
 static int dPin[4] = {10,16,3,0};
 static volatile bool tickFlag = false;
 static volatile bool checkFlag = false;
+static volatile bool AutoDispFlag = false;
 
 volatile bool TempSensFlag = false;
 volatile bool PresSensFlag = false;
+volatile bool AutoFlag = true;
 
 
 static volatile uint32_t TempCount;
@@ -80,6 +83,9 @@ static volatile int ctr = 0;
 //it checks for the measerments if it reache the proper amount
 static volatile uint32_t checktick;
 
+//Auto counter to change the display of the screen
+
+static volatile uint32_t AutoTimer;
 
 // TODO: insert other definitions and declarations here
 
@@ -124,9 +130,15 @@ void SysTick_Handler(void)
 	TempCount++;
 	checktick++;
 	systicks2++;
+	AutoTimer++;
 	//Flag=true;
 	if(counter > 0) {
 		counter-=1;
+	}
+
+	if(AutoTimer%3000 >= 0)
+	{
+		AutoDispFlag = true;
 	}
 
 	if(checktick >= 10000)
@@ -285,10 +297,12 @@ int main(void)
 	DecimalEdit FreqEditObj(lcd, node, std::string("Frequency"),20000,0);
 	TempEdit TempEditObj(lcd, node, std::string("Temperature"),35,0);
 	PresEdit PresEditObj(lcd, node, std::string("Pressure"),100,0);
+	AutoEdit AutoEditObj(lcd, node, std::string("Welcome"),35,0,22);
 
 	PropertyEdit *freqEditPoint;
 	PropertyEdit *tempEditPoint;
 	PropertyEdit *presEditPoint;
+	PropertyEdit *autoEditPoint;
 
 
 	TempSens TempSensObj;
@@ -304,11 +318,14 @@ int main(void)
 	presEditPoint = &PresEditObj;
 	tempEditPoint = &TempEditObj;
 	freqEditPoint = &FreqEditObj;
+	autoEditPoint = &AutoEditObj;
 
 
 	presEditPoint->setValue(22);
 	tempEditPoint->setValue(22);
+	autoEditPoint->setValue(22);
 
+	menu.addItem(new MenuItem(AutoEditObj));
 	menu.addItem(new MenuItem(TempEditObj));
 	menu.addItem(new MenuItem(PresEditObj));
 	menu.addItem(new MenuItem(FreqEditObj));
@@ -341,13 +358,43 @@ int main(void)
 		 //check for the checkflag if true set it false and write down the functionality for checking
 
 		if(checkFlag)
+		{
+			checkFlag = false;
+			if(TempSensFlag)
+				check(tempSensPoint, tempEditPoint, freqEditPoint);
+			else if(PresSensFlag)
+				check(presSensPoint, presEditPoint, freqEditPoint);
+		}
+
+
+		if(AutoDispFlag)
+		{
+			if(AutoEditObj.getTitle()!="Auto")
 			{
-				checkFlag = false;
-				if(TempSensFlag)
-					check(tempSensPoint, tempEditPoint, freqEditPoint);
-				else if(PresSensFlag)
-					check(presSensPoint, presEditPoint, freqEditPoint);
+				switch (AutoTimer/3000) {
+				case 0:
+					break;
+				case 1:
+					AutoEditObj.setTitle("Welcome .");
+					break;
+				case 2:
+					AutoEditObj.setTitle("Welcome ..");
+					break;
+				case 3:
+					AutoEditObj.setTitle("Welcome ...");
+					break;
+				case 4:
+					AutoEditObj.setTitle("Welcome ....");
+					break;
+				case 5:
+					AutoEditObj.setTitle("Welcome .....");
+					break;
+				case 6:
+					AutoEditObj.setTitle("Auto");
+					break;
+				}
 			}
+		}
 
 	}
 

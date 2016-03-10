@@ -33,11 +33,11 @@ void PresEdit::save() {
 	desVal = edit;
 	TempSensFlag = false;
 	PresSensFlag = true;
+	AutoFlag = false;
 	//setFrequency(node, value);
 
 	// todo: save current value for example to EEPROM for permanent storage
 }
-
 void PresEdit::setSensValue(float val){
 	value = val;
 	display();
