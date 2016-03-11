@@ -11,6 +11,7 @@
 #include "DigitalIoPin.h"
 
 unsigned int GetSysticks();
+void Sleep(int ms);
 
 class DebouncedInput: public DigitalIoPin {
 public:

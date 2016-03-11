@@ -26,6 +26,8 @@ bool DebouncedInput::read() {
 	if(value != state) {
 		// it is different from last reported increment stable time counter
 		stableTime += now - last;
+		Sleep(100);
+
 	}
 	else {
 		// went back to old value - reset stable time counter

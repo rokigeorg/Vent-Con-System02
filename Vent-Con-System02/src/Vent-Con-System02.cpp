@@ -208,7 +208,6 @@ int isPressed(){
 
 	*/
 	//this sleep holding the system
-	Sleep(100);
 
 	return btnKeyNum;
 }
@@ -446,7 +445,7 @@ int main(void)
 			}
 		}
 
-		//__WFI();
+		__WFI();
 
 	}
 
