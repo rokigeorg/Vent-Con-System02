@@ -180,10 +180,10 @@ uint32_t millis() {
 int isPressed(){
 	int btnKeyNum =0;
 	//create digi
-	static DebouncedInput dInput4(4,100);
-	static DebouncedInput dInput5(5,100);
-	static DebouncedInput dInput6(6,100);
-	static DebouncedInput dInput7(7,100);
+	static DebouncedInput dInput4(4,50);
+	static DebouncedInput dInput5(5,50);
+	static DebouncedInput dInput6(6,50);
+	static DebouncedInput dInput7(7,50);
 
 	static bool dArray[4];
 
@@ -356,11 +356,14 @@ int main(void)
 		}
 
 		 //check for the checkflag if true set it false and write down the functionality for checking
-
+		// future implementation Having an offset for the system so that when the system reaches
+		// the required operating mood it operates on 20% of the given frequency power.
 		if(checkFlag)
 		{
 			checkFlag = false;
-			if(TempSensFlag)
+			if(AutoFlag)
+				check(tempSensPoint, autoEditPoint, freqEditPoint);
+			else if(TempSensFlag)
 				check(tempSensPoint, tempEditPoint, freqEditPoint);
 			else if(PresSensFlag)
 				check(presSensPoint, presEditPoint, freqEditPoint);
@@ -373,21 +376,22 @@ int main(void)
 			{
 				switch (AutoTimer/3000) {
 				case 0:
+					AutoEditObj.setStartUpTitle("");
 					break;
 				case 1:
-					AutoEditObj.setTitle("Welcome .");
+					AutoEditObj.setStartUpTitle("Welcome");
 					break;
 				case 2:
-					AutoEditObj.setTitle("Welcome ..");
+					AutoEditObj.setStartUpTitle("Welcome.");
 					break;
 				case 3:
-					AutoEditObj.setTitle("Welcome ...");
+					AutoEditObj.setStartUpTitle("Welcome..");
 					break;
 				case 4:
-					AutoEditObj.setTitle("Welcome ....");
+					AutoEditObj.setStartUpTitle("Welcome...");
 					break;
 				case 5:
-					AutoEditObj.setTitle("Welcome .....");
+					AutoEditObj.setStartUpTitle("Welcome....");
 					break;
 				case 6:
 					AutoEditObj.setTitle("Auto");

@@ -275,6 +275,9 @@ void LiquidCrystal::createChar(uint8_t location, uint8_t charmap[]) {
   }
 }
 
+
+
+
 /*********** mid level commands, for sending data/cmds */
 
 inline void LiquidCrystal::command(uint8_t value) {

@@ -21,6 +21,8 @@ AutoEdit::AutoEdit(LiquidCrystal& lcd_, ModbusMaster& node_, std::string editTit
 	upperL = _upperL;
 	lowerL = _lowerL;
 	desVal = _desvalue;
+
+	ventCharFlag= true;
 }
 
 AutoEdit::~AutoEdit() {
@@ -126,3 +128,45 @@ float AutoEdit::getTol() {
 	return tol;
 }
 
+void AutoEdit::setStartUpTitle(std::string openerStr){
+	BarGraph barG(lcd, 50);
+	lcd.clear();
+	lcd.setCursor(4,0);
+	lcd.Print(openerStr);
+
+	drawSpinningVentChar();
+}
+void AutoEdit::drawSpinningVentChar(){
+	std::string plusSymb= "+";
+	uint8_t charSpecX[8] = {0x00,0x11,0x0A,0x04,0x0A,0x11,0x00,0x00};
+	static int i;
+	i++;
+	if(ventCharFlag){
+		//write it to the lcd memory on position 6
+		lcd.createChar(6,charSpecX);
+		lcd.setCursor(5,1);
+		// tell the lcd to print the charator from memory position 6
+		lcd.write(6);
+		lcd.setCursor(7,1);
+		// tell the lcd to print the charator from memory position 6
+		lcd.write(6);
+		lcd.setCursor(9,1);
+		// tell the lcd to print the charator from memory position 6
+		lcd.write(6);
+		if(i>10){
+			ventCharFlag=false;
+			i=0;
+		}
+	}else{
+		lcd.setCursor(5,1);
+		lcd.Print(plusSymb);
+		lcd.setCursor(7,1);
+		lcd.Print(plusSymb);
+		lcd.setCursor(9,1);
+		lcd.Print(plusSymb);
+		if(i>10){
+			ventCharFlag=true;
+			i=0;
+		}
+	}
+}

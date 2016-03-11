@@ -36,8 +36,10 @@ public:
 	bool setFrequency(ModbusMaster& node, uint16_t freq){};
 	void setTitle(std::string tit);
 	std::string getTitle();
+	void setStartUpTitle(std::string openerStr);
 private:
 	void displayEditValue();
+	void drawSpinningVentChar();
 	LiquidCrystal& lcd;
 	ModbusMaster& node;
 	std::string title;
@@ -48,6 +50,7 @@ private:
 	bool focus;
 	float upperL;
 	float lowerL;
+	bool ventCharFlag;
 
 };
 
