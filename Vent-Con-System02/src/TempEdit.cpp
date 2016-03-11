@@ -30,9 +30,7 @@ TempEdit::~TempEdit() {
 void TempEdit::save() {
 	// set current value to be same as edit value
 	desVal = edit;
-	TempSensFlag = true;
-	PresSensFlag = false;
-	AutoFlag = false;
+
 }
 
 
@@ -45,7 +43,7 @@ void TempEdit::setValue(float val){
 //this sets the read value from the sens to the obj
 void TempEdit::setSensValue(float val){
 	value = val;
-	display();
+	//display();
 
 }
 
@@ -67,6 +65,9 @@ void TempEdit::decrement() {
 
 void TempEdit::accept() {
 	save();
+	TempSensFlag = true;
+	PresSensFlag = false;
+	AutoFlag = false;
 }
 
 void TempEdit::cancel() {

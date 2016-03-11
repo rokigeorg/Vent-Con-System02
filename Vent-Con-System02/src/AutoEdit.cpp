@@ -33,9 +33,7 @@ AutoEdit::~AutoEdit() {
 void AutoEdit::save() {
 	// set current value to be same as edit value
 	desVal = edit;
-	TempSensFlag = false;
-	PresSensFlag = false;
-	AutoFlag = true;
+
 }
 
 //this sets the desVal to the user input
@@ -49,7 +47,7 @@ void AutoEdit::setValue(float val){
 //this sets the read value from the sens to the obj
 void AutoEdit::setSensValue(float val){
 	value = val;
-	display();
+	//display();
 
 }
 
@@ -67,15 +65,18 @@ void AutoEdit::decrement() {
 		edit = lowerL;
 	}
 }
-
+ */
 void AutoEdit::accept() {
 	save();
+	TempSensFlag = false;
+	PresSensFlag = false;
+	AutoFlag = true;
 }
 
 void AutoEdit::cancel() {
 	edit = desVal;
 }
-*/
+
 
 void AutoEdit::setFocus(bool focus) {
 	this->focus = focus;

@@ -24,8 +24,8 @@ public:
 	void save();
 	void increment(){};
 	void decrement(){};
-	void accept(){};
-	void cancel(){};
+	void accept();
+	void cancel();
 	void setFocus(bool focus);
 	void display();
 	float getValue();

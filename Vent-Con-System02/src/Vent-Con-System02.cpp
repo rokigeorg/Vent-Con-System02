@@ -41,6 +41,7 @@
 #include "TempSens.h"
 #include "PresSens.h"
 #include "AutoEdit.h"
+#include "FeedBack.h"
 
 /*****************************************************************************
  * Private types/enumerations/variables
@@ -198,6 +199,16 @@ int isPressed(){
 			checktick = 0;
 		}
 	}
+/*
+	if(OKCANCELFLAG)
+	{
+		while(TheOKCANCELcounter<20ms)
+
+	}
+
+	*/
+	//this sleep holding the system
+	Sleep(100);
 
 	return btnKeyNum;
 }
@@ -223,6 +234,7 @@ void printRegister(ModbusMaster& node, uint16_t reg) {
  * @return	Always returns 1
  */
 
+/*
 void check(SensorGeneral *s, PropertyEdit *p, PropertyEdit *setFrq)
 {
 
@@ -237,7 +249,15 @@ void check(SensorGeneral *s, PropertyEdit *p, PropertyEdit *setFrq)
 	//needs to be uncommented when working with ModBus
 	//setFrq->save();
 }
+*/
 
+void readData(SensorGeneral *s1, PropertyEdit *p1, SensorGeneral *s2, PropertyEdit *p2, SensorGeneral *s3, PropertyEdit *p3)
+{
+
+	p1->setSensValue(s1->readValues());
+	p2->setSensValue(s2->readValues());
+	p3->setSensValue(s3->readValues());
+}
 
 int main(void)
 {
@@ -319,11 +339,14 @@ int main(void)
 	tempEditPoint = &TempEditObj;
 	freqEditPoint = &FreqEditObj;
 	autoEditPoint = &AutoEditObj;
-
+/*
 
 	presEditPoint->setValue(22);
 	tempEditPoint->setValue(22);
 	autoEditPoint->setValue(22);
+	*/
+
+	FeedBack FeedBackObj(tempSensPoint, autoEditPoint, freqEditPoint);
 
 	menu.addItem(new MenuItem(AutoEditObj));
 	menu.addItem(new MenuItem(TempEditObj));
@@ -359,16 +382,39 @@ int main(void)
 		// future implementation Having an offset for the system so that when the system reaches
 		// the required operating mood it operates on 20% of the given frequency power.
 		if(checkFlag)
-		{
-			checkFlag = false;
-			if(AutoFlag)
-				check(tempSensPoint, autoEditPoint, freqEditPoint);
-			else if(TempSensFlag)
-				check(tempSensPoint, tempEditPoint, freqEditPoint);
-			else if(PresSensFlag)
-				check(presSensPoint, presEditPoint, freqEditPoint);
-		}
+				{
+					checkFlag = false;
 
+					readData(tempSensPoint, autoEditPoint, tempSensPoint, tempEditPoint, presSensPoint, presEditPoint);
+
+
+
+					if(AutoFlag)
+					{
+						FeedBackObj.reload(tempSensPoint, autoEditPoint);
+						autoEditPoint->display();
+						printf("AutoFlag is true \n");
+					}
+						//check(tempSensPoint, autoEditPoint, freqEditPoint);
+					else if(TempSensFlag)
+					{
+						FeedBackObj.reload(tempSensPoint, tempEditPoint);
+						tempEditPoint->display();
+						printf("TempSensFlag is true \n");
+					}
+						//check(tempSensPoint, tempEditPoint, freqEditPoint);
+					else if(PresSensFlag)
+					{
+						//check(presSensPoint, presEditPoint, freqEditPoint);
+						FeedBackObj.reload(presSensPoint, presEditPoint);
+						presEditPoint->display();
+						printf("TempSensFlag is true \n");
+					}
+
+
+					FeedBackObj.check();
+
+				}
 
 		if(AutoDispFlag)
 		{
@@ -400,7 +446,10 @@ int main(void)
 			}
 		}
 
+		//__WFI();
+
 	}
+
 
 	return 1;
 }
