@@ -2,7 +2,7 @@
  * AutoEdit.cpp
  *
  *  Created on: 11.02.2016
- *      Author: georgrokita
+ *      Author: abdullai
  */
 
 #include "AutoEdit.h"
@@ -15,12 +15,12 @@
 AutoEdit::AutoEdit(LiquidCrystal& lcd_, ModbusMaster& node_, std::string editTitle, float _upperL,float _lowerL , float _desvalue): lcd(lcd_),node(node_), title(editTitle){
 
 	value =0;
-	edit =0;
+	edit =22.0;
 	focus =false;
-	tol = 0.1;
+	tol = 0.5;
 	upperL = _upperL;
 	lowerL = _lowerL;
-	desVal = _desvalue;
+	desVal = 22.0;
 
 	ventCharFlag= true;
 }
@@ -51,21 +51,7 @@ void AutoEdit::setSensValue(float val){
 
 }
 
-/*
-void AutoEdit::increment() {
-	edit = edit + 0.2;
-	if(edit >=upperL){
-		edit = upperL;
-	}
-}
 
-void AutoEdit::decrement() {
-	edit = edit - 0.2;
-	if(edit <=lowerL){
-		edit = lowerL;
-	}
-}
- */
 void AutoEdit::accept() {
 	save();
 	TempSensFlag = false;
@@ -79,7 +65,8 @@ void AutoEdit::cancel() {
 
 
 void AutoEdit::setFocus(bool focus) {
-	this->focus = focus;
+	this->focus = false;
+	accept();
 }
 
 void AutoEdit::setTitle(std::string tit) {
@@ -114,10 +101,12 @@ void AutoEdit::display() {
 		barG.draw(result);
 	}
 	lcd.Print(s);
+	//delete s;
 }
 
 
 float AutoEdit::getValue() {
+	DEBUGOUT("Tol is %.3f Value is %.3f and DesValue is %.3f\r\n", tol, value, desVal ,"\n");
 	return value;
 }
 

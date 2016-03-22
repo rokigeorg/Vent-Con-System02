@@ -2,7 +2,7 @@
  * DecimalEdit.h
  *
  *  Created on: 11.02.2016
- *      Author: georgrokita
+ *      Author: abdullai
  */
 
 #ifndef PRESEDIT_H_

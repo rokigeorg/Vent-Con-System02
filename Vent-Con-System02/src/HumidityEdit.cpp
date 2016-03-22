@@ -1,34 +1,34 @@
 /*
- * TempEdit.cpp
+ * HumidityEdit.cpp
  *
  *  Created on: 11.02.2016
  *      Author: abdullai
  */
 
-#include "TempEdit.h"
+#include "HumidityEdit.h"
 #include "ModbusMaster.h"
 #include <cstdio>
 
 
 
 
-TempEdit::TempEdit(LiquidCrystal& lcd_, ModbusMaster& node_, std::string editTitle, float _upperL,float _lowerL): lcd(lcd_),node(node_), title(editTitle){
+HumidityEdit::HumidityEdit(LiquidCrystal& lcd_, ModbusMaster& node_, std::string editTitle, float _upperL,float _lowerL): lcd(lcd_),node(node_), title(editTitle){
 
 	value =0;
-	edit =22.5;
+	edit =32;
 	focus =false;
-	tol = 0.35;
+	tol = 3;
 	upperL = _upperL;
 	lowerL = _lowerL;
-	desVal = 22.5;
+	desVal = 32;
 }
 
-TempEdit::~TempEdit() {
+HumidityEdit::~HumidityEdit() {
 	// TODO Auto-generated destructor stub
 }
 
 
-void TempEdit::save() {
+void HumidityEdit::save() {
 	// set current value to be same as edit value
 	desVal = edit;
 
@@ -36,52 +36,52 @@ void TempEdit::save() {
 
 
 //this sets the desVal to the user input
-void TempEdit::setValue(float val){
+void HumidityEdit::setValue(float val){
 	edit = val;
 	save();
 }
 
 //this sets the read value from the sens to the obj
-void TempEdit::setSensValue(float val){
+void HumidityEdit::setSensValue(float val){
 	value = val;
 	//display();
 
 }
 
 
-void TempEdit::increment() {
-	edit = edit + 0.2;
+void HumidityEdit::increment() {
+	edit = edit + 0.5;
 	if(edit >=upperL){
 		edit = upperL;
 	}
 }
 
-void TempEdit::decrement() {
-	edit = edit - 0.2;
+void HumidityEdit::decrement() {
+	edit = edit - 0.5;
 	if(edit <=lowerL){
 		edit = lowerL;
 	}
 }
 
 
-void TempEdit::accept() {
+void HumidityEdit::accept() {
 	save();
-	TempSensFlag = true;
+	HumidSensFlag= true;
+	TempSensFlag = false;
 	PresSensFlag = false;
-	HumidSensFlag= false;
 	AutoFlag = false;
 }
 
-void TempEdit::cancel() {
+void HumidityEdit::cancel() {
 	edit = desVal;
 }
 
 
-void TempEdit::setFocus(bool focus) {
+void HumidityEdit::setFocus(bool focus) {
 	this->focus = focus;
 }
 
-void TempEdit::display() {
+void HumidityEdit::display() {
 	BarGraph barG(lcd, 50);
 
 	lcd.clear();
@@ -90,14 +90,14 @@ void TempEdit::display() {
 	lcd.setCursor(0,1);
 	char s[16];
 	if(focus) {
-		snprintf(s, 16, "[%4.2f]C", edit);
+		snprintf(s, 16, "[%4.2f]%%", edit);
 		lcd.Print(s);
 		lcd.setCursor(9,1);
 		int result =(edit*50)/((upperL-lowerL)*2);
 		barG.draw(result);
 	}
 	else {
-		snprintf(s, 16, " %4.2f C", value);
+		snprintf(s, 16, " %4.2f %%", value);
 		lcd.Print(s);
 		lcd.setCursor(9,1);
 		int result =(value*50)/((upperL-lowerL)*2);
@@ -109,15 +109,15 @@ void TempEdit::display() {
 }
 
 
-float TempEdit::getValue() {
+float HumidityEdit::getValue() {
 	return value;
 }
 
-float TempEdit::getDesValue() {
+float HumidityEdit::getDesValue() {
 	return desVal;
 }
 
-float TempEdit::getTol() {
+float HumidityEdit::getTol() {
 	return tol;
 }
 

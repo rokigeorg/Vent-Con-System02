@@ -2,7 +2,7 @@
  * Feedback.cpp
  *
  *  Created on: 11.02.2016
- *      Author: georgrokita
+ *      Author: abdullai
  */
 
 #include "FeedBack.h"
@@ -21,6 +21,20 @@ FeedBack *FeedBack::instance()
   return inst;
 }
 */
+
+// Implementation
+FeedBack* FeedBack::_instance = 0;
+
+FeedBack* FeedBack::Instance(SensorGeneral *s, PropertyEdit *p, PropertyEdit *setF) {
+    if (_instance == 0) {
+        _instance = new FeedBack;
+        _instance->sens = s;
+        //sens = s;
+        _instance->prop = p;
+        _instance->setFrq = setF;
+    }
+    return _instance;
+}
 void FeedBack::reload(SensorGeneral *s, PropertyEdit *p)
 {
 	sens = s;
@@ -31,23 +45,22 @@ void FeedBack::check()
 {
 
 	//p->setSensValue(sens->readValues());
+	if ((_instance->prop->getValue() > (_instance->prop->getDesValue() - _instance->prop->getTol()))&& (_instance->prop->getValue() < (_instance->prop->getDesValue() + _instance->prop->getTol())))
+		_instance->setFrq->setValue(_instance->setFrq->getValue()/5);
+	else if(_instance->prop->getValue() < (_instance->prop->getDesValue() + _instance->prop->getTol()))
+		_instance->setFrq->decrement();
+	else if(_instance->prop->getValue() > (_instance->prop->getDesValue() - _instance->prop->getTol()))
+		_instance->setFrq->increment();
 
-	if(prop->getValue() < (prop->getDesValue() - prop->getTol()))
-		setFrq->decrement();
-	else if(prop->getValue() < (prop->getDesValue() - prop->getTol()))
-		setFrq->increment();
-	else
-		setFrq->setValue(setFrq->getValue()/5);
 
-	//setFrq->save();
+	setFrq->save();
 
 }
-FeedBack::FeedBack(SensorGeneral *s, PropertyEdit *p, PropertyEdit *setFrq){
+FeedBack::FeedBack(){
 
-	sens = s;
-	prop = p;
-	this->setFrq = setFrq;
 }
+
+
 
 FeedBack::~FeedBack() {
 	// TODO Auto-generated destructor stub

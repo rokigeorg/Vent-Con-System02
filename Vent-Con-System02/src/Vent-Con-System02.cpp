@@ -6,7 +6,7 @@
  Copyright   : $(copyright)
  Description : main definition
 ===============================================================================
-*/
+ */
 
 #if defined (__USE_LPCOPEN)
 #if defined(NO_BOARD_LIB)
@@ -36,12 +36,15 @@
 #include "DebouncedInput.h"
 
 #include "TempEdit.h"
+#include "HumidityEdit.h"
 #include "PresEdit.h"
 #include "SensorGeneral.h"
 #include "TempSens.h"
 #include "PresSens.h"
 #include "AutoEdit.h"
 #include "FeedBack.h"
+#include "TempSensDig.h"
+#include "HumiditySens.h"
 
 /*****************************************************************************
  * Private types/enumerations/variables
@@ -70,6 +73,7 @@ static volatile bool AutoDispFlag = false;
 
 volatile bool TempSensFlag = false;
 volatile bool PresSensFlag = false;
+volatile bool HumidSensFlag = false;
 volatile bool AutoFlag = true;
 
 
@@ -77,7 +81,7 @@ static volatile uint32_t TempCount;
 /*
 volatile bool TempFlag;
 volatile bool PresFlag;
-*/
+ */
 
 static volatile int ctr = 0;
 
@@ -199,14 +203,14 @@ int isPressed(){
 			checktick = 0;
 		}
 	}
-/*
+	/*
 	if(OKCANCELFLAG)
 	{
 		while(TheOKCANCELcounter<20ms)
 
 	}
 
-	*/
+	 */
 	//this sleep holding the system
 
 	return btnKeyNum;
@@ -248,14 +252,19 @@ void check(SensorGeneral *s, PropertyEdit *p, PropertyEdit *setFrq)
 	//needs to be uncommented when working with ModBus
 	//setFrq->save();
 }
-*/
+ */
 
-void readData(SensorGeneral *s1, PropertyEdit *p1, SensorGeneral *s2, PropertyEdit *p2, SensorGeneral *s3, PropertyEdit *p3)
+void readData(SensorGeneral *s1, PropertyEdit *p1, PropertyEdit *p2, SensorGeneral *s3, PropertyEdit *p3, SensorGeneral *s4, PropertyEdit *p4)
 {
+	float dataTempSens, dataPresSens, dataHiumSens;
+	dataTempSens = s1->readValues();
+	dataPresSens = s3->readValues();
+	dataHiumSens = s4->readValues();
 
-	p1->setSensValue(s1->readValues());
-	p2->setSensValue(s2->readValues());
-	p3->setSensValue(s3->readValues());
+	p1->setSensValue(dataTempSens);
+	p2->setSensValue(dataTempSens);
+	p3->setSensValue(dataPresSens);
+	p4->setSensValue(dataHiumSens);
 }
 
 int main(void)
@@ -285,11 +294,14 @@ int main(void)
 		Chip_GPIO_SetPinDIRInput(LPC_GPIO, dPort[i], dPin[i]);
 	}
 
+
+
+
 	Chip_RIT_Init(LPC_RITIMER);
 	NVIC_EnableIRQ(RITIMER_IRQn);
 	ModbusMaster node(2); // Create modbus object that connects to slave id 2
 
-	/*
+
 
 	 node.begin(9600); // set transmission rate - other parameters are set inside the object and can't be changed here
 
@@ -305,7 +317,7 @@ int main(void)
 
 
 	Sleep(4000);
-*/
+
 
 	LiquidCrystal lcd(8, 9, 10, 11, 12, 13);
 
@@ -315,41 +327,56 @@ int main(void)
 
 	DecimalEdit FreqEditObj(lcd, node, std::string("Frequency"),20000,0);
 	TempEdit TempEditObj(lcd, node, std::string("Temperature"),35,0);
+	HumidityEdit HumidEditObj(lcd, node, std::string("Humidity"),100,0);
 	PresEdit PresEditObj(lcd, node, std::string("Pressure"),100,0);
-	AutoEdit AutoEditObj(lcd, node, std::string("Welcome"),35,0,22);
+	//PresEdit PresEditObj(lcd, node, std::string("Pressure"),100,0);
+	AutoEdit AutoEditObj(lcd, node, std::string("Welcome"),35,0,22.0);
 
 	PropertyEdit *freqEditPoint;
 	PropertyEdit *tempEditPoint;
+	PropertyEdit *humidEditPoint;
 	PropertyEdit *presEditPoint;
 	PropertyEdit *autoEditPoint;
 
 
-	TempSens TempSensObj;
+	TempSensDig TempSensObj(0, 100000);
+	HumidSens HumiSensObj(0, 100000);
+	//TempSens TempSensObj;
 	PresSens PresSensObj(0, 100000);
+	//TempSensDig TempHumSenssObj(0, 100000);
 
 	SensorGeneral *tempSensPoint;
 	SensorGeneral *presSensPoint;
-
+	//SensorGeneral *tempHumidSensPoint;
+	SensorGeneral *humidSensPoint;
 
 	presSensPoint = &PresSensObj;
 	tempSensPoint = &TempSensObj;
+	humidSensPoint = &HumiSensObj;
+	//tempHumidSensPoint = &TempHumSenssObj;
+
 
 	presEditPoint = &PresEditObj;
 	tempEditPoint = &TempEditObj;
+	humidEditPoint = &HumidEditObj;
 	freqEditPoint = &FreqEditObj;
 	autoEditPoint = &AutoEditObj;
-/*
+	/*
 
 	presEditPoint->setValue(22);
 	tempEditPoint->setValue(22);
 	autoEditPoint->setValue(22);
-	*/
+	 */
 
-	FeedBack FeedBackObj(tempSensPoint, autoEditPoint, freqEditPoint);
+	FeedBack *FeedBackObj =  FeedBack::Instance(tempSensPoint, autoEditPoint, freqEditPoint);
+	//FeedBackObj(tempSensPoint, autoEditPoint, freqEditPoint);
+
+
 
 	menu.addItem(new MenuItem(AutoEditObj));
 	menu.addItem(new MenuItem(TempEditObj));
 	menu.addItem(new MenuItem(PresEditObj));
+	menu.addItem(new MenuItem(HumidEditObj));
 	menu.addItem(new MenuItem(FreqEditObj));
 
 	menu.event(MenuItem::show); // display first menu item
@@ -358,7 +385,7 @@ int main(void)
 	volatile static int k;
 	while(1){
 
-		//printRegister(node, 3); // for keeping the modbus on (change to an interupt)
+		printRegister(node, 3); // for keeping the modbus on (change to an interupt)
 		k = isPressed();
 		if(k > 0) {
 			switch(k){
@@ -377,43 +404,54 @@ int main(void)
 			}
 		}
 
-		 //check for the checkflag if true set it false and write down the functionality for checking
+		//check for the checkflag if true set it false and write down the functionality for checking
 		// future implementation Having an offset for the system so that when the system reaches
 		// the required operating mood it operates on 20% of the given frequency power.
 		if(checkFlag)
-				{
-					checkFlag = false;
+		{
+			checkFlag = false;
 
-					readData(tempSensPoint, autoEditPoint, tempSensPoint, tempEditPoint, presSensPoint, presEditPoint);
-
-
-
-					if(AutoFlag)
-					{
-						FeedBackObj.reload(tempSensPoint, autoEditPoint);
-						autoEditPoint->display();
-						printf("AutoFlag is true \n");
-					}
-						//check(tempSensPoint, autoEditPoint, freqEditPoint);
-					else if(TempSensFlag)
-					{
-						FeedBackObj.reload(tempSensPoint, tempEditPoint);
-						tempEditPoint->display();
-						printf("TempSensFlag is true \n");
-					}
-						//check(tempSensPoint, tempEditPoint, freqEditPoint);
-					else if(PresSensFlag)
-					{
-						//check(presSensPoint, presEditPoint, freqEditPoint);
-						FeedBackObj.reload(presSensPoint, presEditPoint);
-						presEditPoint->display();
-						printf("TempSensFlag is true \n");
-					}
+			readData(tempSensPoint, autoEditPoint, tempEditPoint, presSensPoint, presEditPoint, humidSensPoint, humidEditPoint);
 
 
-					FeedBackObj.check();
 
-				}
+			if(AutoFlag)
+			{
+				FeedBackObj->reload(tempSensPoint, autoEditPoint);
+				autoEditPoint->display();
+				printf("AutoFlag is true \n");
+			}
+			//check(tempSensPoint, autoEditPoint, freqEditPoint);
+			else if(TempSensFlag)
+			{
+				FeedBackObj->reload(tempSensPoint, tempEditPoint);
+				tempEditPoint->display();
+				printf("TempSensFlag is true \n");
+			}
+			//check(tempSensPoint, tempEditPoint, freqEditPoint);
+			else if(PresSensFlag)
+			{
+				//check(presSensPoint, presEditPoint, freqEditPoint);
+				//FeedBackObj->reload(presSensPoint, presEditPoint);
+				FeedBackObj->reload(presSensPoint, presEditPoint);
+
+				presEditPoint->display();
+				printf("PresureFlag is true \n");
+			}
+			else if(HumidSensFlag)
+			{
+				//check(presSensPoint, presEditPoint, freqEditPoint);
+				//FeedBackObj->reload(presSensPoint, presEditPoint);
+				FeedBackObj->reload(humidSensPoint, humidEditPoint);
+
+				humidEditPoint->display();
+				printf("HumidFlag is true \n");
+			}
+
+
+			FeedBackObj->check();
+
+		}
 
 		if(AutoDispFlag)
 		{
@@ -445,7 +483,7 @@ int main(void)
 			}
 		}
 
-		__WFI();
+		//__WFI();
 
 	}
 

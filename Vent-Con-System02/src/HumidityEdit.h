@@ -5,8 +5,8 @@
  *      Author: abdullai
  */
 
-#ifndef TEMPEDIT_H_
-#define TEMPEDIT_H_
+#ifndef HUMIDITYEDIT_H_
+#define HUMIDITYEDIT_H_
 
 #include "PropertyEdit.h"
 #include "ModbusMaster.h"
@@ -17,10 +17,10 @@
 void Sleep(int ms);
 
 
-class TempEdit:public PropertyEdit {
+class HumidityEdit:public PropertyEdit {
 public:
-	TempEdit(LiquidCrystal& lcd_,ModbusMaster& node_, std::string editTitle, float _upperL = 100,float _lowerL =0);
-	virtual ~TempEdit();
+	HumidityEdit(LiquidCrystal& lcd_,ModbusMaster& node_, std::string editTitle, float _upperL = 100,float _lowerL =0);
+	virtual ~HumidityEdit();
 	void save();
 	void increment();
 	void decrement();
@@ -49,4 +49,4 @@ private:
 
 };
 
-#endif /* TEMPEDIT_H_ */
+#endif /* HUMIDITYEDIT_H_ */

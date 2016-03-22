@@ -2,7 +2,7 @@
  * DecimalEdit.cpp
  *
  *  Created on: 11.02.2016
- *      Author: georgrokita
+ *      Author: abdullai
  */
 
 #include "DecimalEdit.h"
@@ -64,8 +64,9 @@ void DecimalEdit::save() {
 	// set current value to be same as edit value
 	value = edit;
 
-	//setFrequency(node, value);
 	//needs to be uncommented when working with ModBus
+	setFrequency(node, value);
+
 }
 
 void DecimalEdit::setValue(float value){

@@ -8,10 +8,31 @@
 #ifndef FEEDBACK_H_
 #define FEEDBACK_H_
 
+// Declaration
+
+
+
 #include "PropertyEdit.h"
 #include "ModbusMaster.h"
 #include "SensorGeneral.h"
 
+class FeedBack {
+public:
+    static FeedBack* Instance(SensorGeneral *s, PropertyEdit *p, PropertyEdit *setFrq);
+    void reload(SensorGeneral *s, PropertyEdit *p);
+    void check();
+protected:
+    FeedBack();
+    virtual ~FeedBack();
+private:
+    static FeedBack* _instance;
+    SensorGeneral *sens;
+    PropertyEdit *prop;
+    PropertyEdit *setFrq;
+};
+
+
+/*
 class FeedBack {
 public:
 	FeedBack(SensorGeneral *s, PropertyEdit *p, PropertyEdit *setFrq);
@@ -24,6 +45,7 @@ private:
 	PropertyEdit *setFrq;
 
 };
+*/
 
 /*
 

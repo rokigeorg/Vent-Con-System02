@@ -263,6 +263,9 @@ void LiquidCrystal::Print(char *s){
     write(s[zz]);
     zz++;
   }
+
+  //new stuff
+  //delete s;
 }
 
 // Allows us to fill the first 8 CGRAM locations
@@ -273,6 +276,9 @@ void LiquidCrystal::createChar(uint8_t location, uint8_t charmap[]) {
   for (int i=0; i<8; i++) {
     write(charmap[i]);
   }
+  //Deleteing the char
+
+//  delete charmap;
 }
 
 

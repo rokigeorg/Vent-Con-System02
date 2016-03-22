@@ -2,7 +2,7 @@
  * PresEdit.cpp
  *
  *  Created on: 11.02.2016
- *      Author: georgrokita
+ *      Author: abdullai
  */
 
 #include "PresEdit.h"
@@ -15,11 +15,12 @@
 PresEdit::PresEdit(LiquidCrystal& lcd_, ModbusMaster& node_, std::string editTitle, float _upperL,float _lowerL): lcd(lcd_),node(node_), title(editTitle){
 
 	value =0;
-	edit =0;
-	tol = 0.5;
+	edit =10;
+	tol = 1;
 	focus =false;
 	upperL = _upperL;
 	lowerL = _lowerL;
+	desVal=10;
 }
 
 
@@ -67,6 +68,7 @@ void PresEdit::accept() {
 	save();
 	TempSensFlag = false;
 	PresSensFlag = true;
+	HumidSensFlag= false;
 	AutoFlag = false;
 }
 
@@ -101,6 +103,9 @@ void PresEdit::display() {
 		int result =(value*50)/((upperL-lowerL)*2);
 		barG.draw(result);
 	}
+	lcd.Print(s);
+	//delete the char
+	//delete s;
 }
 
 
