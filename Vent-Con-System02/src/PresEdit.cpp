@@ -16,7 +16,7 @@ PresEdit::PresEdit(LiquidCrystal& lcd_, ModbusMaster& node_, std::string editTit
 
 	value =0;
 	edit =10;
-	tol = 1;
+	tol = 2;
 	focus =false;
 	upperL = _upperL;
 	lowerL = _lowerL;

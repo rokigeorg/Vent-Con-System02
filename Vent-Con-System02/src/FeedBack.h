@@ -21,6 +21,7 @@ public:
     static FeedBack* Instance(SensorGeneral *s, PropertyEdit *p, PropertyEdit *setFrq);
     void reload(SensorGeneral *s, PropertyEdit *p);
     void check();
+    void checkPres();
 protected:
     FeedBack();
     virtual ~FeedBack();

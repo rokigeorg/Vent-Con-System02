@@ -56,6 +56,23 @@ void FeedBack::check()
 	setFrq->save();
 
 }
+
+void FeedBack::checkPres()
+{
+
+	//p->setSensValue(sens->readValues());
+	if ((_instance->prop->getValue() > (_instance->prop->getDesValue() - _instance->prop->getTol()))&& (_instance->prop->getValue() < (_instance->prop->getDesValue() + _instance->prop->getTol())))
+		return;
+	else if(_instance->prop->getValue() < (_instance->prop->getDesValue() + _instance->prop->getTol()))
+		_instance->setFrq->increment();
+	else if(_instance->prop->getValue() > (_instance->prop->getDesValue() - _instance->prop->getTol()))
+		_instance->setFrq->decrement();
+
+
+	setFrq->save();
+
+}
+
 FeedBack::FeedBack(){
 
 }

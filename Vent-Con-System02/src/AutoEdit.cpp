@@ -65,7 +65,7 @@ void AutoEdit::cancel() {
 
 
 void AutoEdit::setFocus(bool focus) {
-	this->focus = false;
+	this->focus = focus;
 	accept();
 }
 
